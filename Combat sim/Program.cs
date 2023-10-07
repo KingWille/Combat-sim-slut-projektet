@@ -1,11 +1,14 @@
 ﻿using Combat_sim;
 using System.Runtime.CompilerServices;
 
+string typeOfStat = "";
+string conflicts = "";
 string selectedAttackUnit = "";
 string selectedDefenceUnit = "";
 string selectedBonus = "";
 string inputCombatTurns = "";
 
+int conflictChoice = 0;
 int numberOfCombat = 0;
 int resultAttack = 0;
 int resultDefence = 0;
@@ -28,92 +31,69 @@ for(int i = 0; i < bonusArray.Length; i++)
     bonusArray[i] = i.ToString();
 } 
 
-//Användaren väljer enhet som attackerar
-while (selectedAttackUnit != "1" && selectedAttackUnit != "2")
+while(typeOfStat != "1" && typeOfStat != "2")
 {
-    Console.WriteLine("Select Attack unit: ");
-    Console.WriteLine("1: Melee\n2: Ranged\n");
+    Console.WriteLine("1.AutoStats\n2.Manual");
 
-    selectedAttackUnit = Console.ReadLine();
+    typeOfStat = Console.ReadLine();
 
-    if (selectedAttackUnit == "1")
-    {
-        Melee attacker = new Melee();
-        units[0] = attacker;
-    }
-    else if (selectedAttackUnit == "2")
-    {
-        Ranged attacker = new Ranged();
-        units[0] = attacker;
-    }
-    else
+    if(typeOfStat != "1" && typeOfStat != "2")
     {
         Console.WriteLine("Please choose a valid answer");
     }
- }
+}
 
-
-//Användaren väljer vilken bonus attackenheten ska ha
-while(!bonusFlag)
+//Kör autorun
+if (typeOfStat == "1")
 {
-    Console.WriteLine("Select bonustype for attacker");
-    Console.WriteLine((units[0]).PrintBonus());
+    Autorun autoRun = new Autorun();
 
-    selectedBonus = Console.ReadLine();
-    
-    for(int i = 0; i < bonusArray.Length; i++)
+    while (!Int32.TryParse(conflicts, out conflictChoice))
     {
-        if (bonusArray[i] == selectedBonus) 
+        Console.WriteLine("Number of combats per conflict: ");
+
+        conflicts = Console.ReadLine();
+
+        if (!Int32.TryParse(conflicts, out conflictChoice))
         {
-            bonusFlag = true;
+            Console.WriteLine("Please choose a valid answer");
         }
     }
 
-    if (!bonusFlag)
-    {
-        Console.WriteLine("Please choose a valid answer");
-    }
+    autoRun.Run(conflictChoice);
 }
-
-bonusFlag = false;
-units[0].SetBonus(Int32.Parse(selectedBonus));
-
-//Användaren väljer enhet som försvarar
-while(selectedDefenceUnit != "1" && selectedDefenceUnit != "2" && selectedDefenceUnit != "3")
+else
 {
-    Console.WriteLine("Select defence unit:");
-    Console.WriteLine("1: Melee\n2: Ranged\n3: Siege");
+    //Användaren väljer enhet som attackerar
+    while (selectedAttackUnit != "1" && selectedAttackUnit != "2")
+    {
+        Console.WriteLine("Select Attack unit: ");
+        Console.WriteLine("1: Melee\n2: Ranged\n");
 
-    selectedDefenceUnit = Console.ReadLine();
+        selectedAttackUnit = Console.ReadLine();
 
-    if(selectedDefenceUnit == "1")
-    {
-        Melee defender = new Melee();
-        units[1] = defender;
+        if (selectedAttackUnit == "1")
+        {
+            Melee attacker = new Melee();
+            units[0] = attacker;
+        }
+        else if (selectedAttackUnit == "2")
+        {
+            Ranged attacker = new Ranged();
+            units[0] = attacker;
+        }
+        else
+        {
+            Console.WriteLine("Please choose a valid answer");
+        }
     }
-    else if(selectedDefenceUnit == "2") 
-    {
-        Ranged defender = new Ranged();
-        units[1] = defender;
-    }
-    else if(selectedDefenceUnit == "3")
-    {
-        Siege defender = new Siege();
-        units[1] = defender;
-    }
-    else
-    {
-        Console.WriteLine("Please choose a valid answer");
-    }
-}
 
-//Väljer bonustyp för försvararen
-if(selectedDefenceUnit != "3")
-{
+
+    //Användaren väljer vilken bonus attackenheten ska ha
     while (!bonusFlag)
     {
-        Console.WriteLine("Select bonustype for defender");
-        Console.WriteLine(units[1].PrintBonus());
+        Console.WriteLine("Select bonustype for attacker");
+        Console.WriteLine((units[0]).PrintBonus());
 
         selectedBonus = Console.ReadLine();
 
@@ -127,40 +107,99 @@ if(selectedDefenceUnit != "3")
 
         if (!bonusFlag)
         {
-            Console.WriteLine("Please select a valid answer");
+            Console.WriteLine("Please choose a valid answer");
         }
     }
-}
 
-units[1].SetBonus(Int32.Parse(selectedBonus));
+    bonusFlag = false;
+    units[0].SetBonus(Int32.Parse(selectedBonus));
 
-while(!Int32.TryParse(inputCombatTurns, out numberOfCombat))
-{
-    Console.WriteLine("Enter number of attacks: ");
-    inputCombatTurns = Console.ReadLine();
-}
-
-for(int i = 0; i < numberOfCombat; i++)
-{
-    resultAttack = units[0].Attack + rnd.Next(1, 9);
-    resultDefence = units[1].Armor + rnd.Next(1, 9);
-
-    if(resultAttack - resultDefence <= 0)
+    //Användaren väljer enhet som försvarar
+    while (selectedDefenceUnit != "1" && selectedDefenceUnit != "2" && selectedDefenceUnit != "3")
     {
-        lose++;
+        Console.WriteLine("Select defence unit:");
+        Console.WriteLine("1: Melee\n2: Ranged\n3: Siege");
+
+        selectedDefenceUnit = Console.ReadLine();
+
+        if (selectedDefenceUnit == "1")
+        {
+            Melee defender = new Melee();
+            units[1] = defender;
+        }
+        else if (selectedDefenceUnit == "2")
+        {
+            Ranged defender = new Ranged();
+            units[1] = defender;
+        }
+        else if (selectedDefenceUnit == "3")
+        {
+            Siege defender = new Siege();
+            units[1] = defender;
+        }
+        else
+        {
+            Console.WriteLine("Please choose a valid answer");
+        }
     }
-    else
+
+    //Väljer bonustyp för försvararen
+    if (selectedDefenceUnit != "3")
     {
-        wins++;
+        while (!bonusFlag)
+        {
+            Console.WriteLine("Select bonustype for defender");
+            Console.WriteLine(units[1].PrintBonus());
+
+            selectedBonus = Console.ReadLine();
+
+            for (int i = 0; i < bonusArray.Length; i++)
+            {
+                if (bonusArray[i] == selectedBonus)
+                {
+                    bonusFlag = true;
+                }
+            }
+
+            if (!bonusFlag)
+            {
+                Console.WriteLine("Please select a valid answer");
+            }
+        }
     }
+
+    units[1].SetBonus(Int32.Parse(selectedBonus));
+
+    while (!Int32.TryParse(inputCombatTurns, out numberOfCombat))
+    {
+        Console.WriteLine("Enter number of attacks: ");
+        inputCombatTurns = Console.ReadLine();
+    }
+
+    //Kör igenom combaten x antal gånger
+
+    for (int i = 0; i < numberOfCombat; i++)
+    {
+        resultAttack = units[0].Attack + rnd.Next(1, 9);
+        resultDefence = units[1].Armor + rnd.Next(1, 9);
+
+        if (resultAttack - resultDefence <= 0)
+        {
+            lose++;
+        }
+        else
+        {
+            wins++;
+        }
+    }
+
+    winPercentage = wins / numberOfCombat * 100;
+
+    Console.WriteLine($"{units[0].Name} defeated {units[1].Name} {wins} times.");
+    Console.WriteLine($"Number of turns: {numberOfCombat}\nNumber of wins: {wins}\nNumber of loses: {lose}\nWin %: {(float)winPercentage}%");
+
+    Console.WriteLine("Press any button to exit...");
+    Console.ReadLine();
 }
-
-winPercentage = wins / numberOfCombat * 100;
-
-Console.WriteLine($"{units[0].Name} defeated {units[1].Name} {wins} times.");
-Console.WriteLine($"Number of turns: {numberOfCombat}\nNumber of wins: {wins}\nNumber of loses: {lose}\nWin %: {(float)winPercentage}%");
-
-Console.WriteLine("Press any button to exit...");
-Console.ReadLine();
 
 
