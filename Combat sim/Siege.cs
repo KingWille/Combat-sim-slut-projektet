@@ -13,5 +13,13 @@ namespace Combat_sim
             Armor = 11;
             Name = "Siege";
         }
+
+        public override string PrintBonus()
+        {
+            return "";
+        }
+        public override void SetBonus(int selection)
+        {
+        }
     }
 }

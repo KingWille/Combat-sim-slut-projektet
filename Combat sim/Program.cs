@@ -5,10 +5,11 @@ string selectedAttackUnit = "";
 string selectedDefenceUnit = "";
 string selectedBonus = "";
 string inputCombatTurns = "";
-int numberOfCombat = 0;
 
+int numberOfCombat = 0;
 int resultAttack = 0;
 int resultDefence = 0;
+
 float winPercentage = 0;
 float wins = 0;
 float lose = 0;
@@ -17,8 +18,8 @@ bool bonusFlag = false;
 
 string[] bonusArray = new string[8];
 
-BaseVariables attacker = new BaseVariables();
-BaseVariables defender = new BaseVariables();
+BaseVariables[] units = new BaseVariables[2];
+
 Random rnd = new Random();
 
 //Sätter värdena till arrayen
@@ -37,11 +38,13 @@ while (selectedAttackUnit != "1" && selectedAttackUnit != "2")
 
     if (selectedAttackUnit == "1")
     {
-        attacker = new Melee();
+        Melee attacker = new Melee();
+        units[0] = attacker;
     }
     else if (selectedAttackUnit == "2")
     {
-        attacker = new Ranged();
+        Ranged attacker = new Ranged();
+        units[0] = attacker;
     }
     else
     {
@@ -54,7 +57,7 @@ while (selectedAttackUnit != "1" && selectedAttackUnit != "2")
 while(!bonusFlag)
 {
     Console.WriteLine("Select bonustype for attacker");
-    attacker.printBonus(attacker.units[selectedAttackUnit]);
+    Console.WriteLine((units[0]).PrintBonus());
 
     selectedBonus = Console.ReadLine();
     
@@ -73,6 +76,7 @@ while(!bonusFlag)
 }
 
 bonusFlag = false;
+units[0].SetBonus(Int32.Parse(selectedBonus));
 
 //Användaren väljer enhet som försvarar
 while(selectedDefenceUnit != "1" && selectedDefenceUnit != "2" && selectedDefenceUnit != "3")
@@ -84,15 +88,18 @@ while(selectedDefenceUnit != "1" && selectedDefenceUnit != "2" && selectedDefenc
 
     if(selectedDefenceUnit == "1")
     {
-        defender = new Melee();
+        Melee defender = new Melee();
+        units[1] = defender;
     }
     else if(selectedDefenceUnit == "2") 
     {
-        defender = new Ranged();
+        Ranged defender = new Ranged();
+        units[1] = defender;
     }
     else if(selectedDefenceUnit == "3")
     {
-        defender = new Siege();
+        Siege defender = new Siege();
+        units[1] = defender;
     }
     else
     {
@@ -106,7 +113,7 @@ if(selectedDefenceUnit != "3")
     while (!bonusFlag)
     {
         Console.WriteLine("Select bonustype for defender");
-        attacker.printBonus(attacker.units[selectedAttackUnit]);
+        Console.WriteLine(units[1].PrintBonus());
 
         selectedBonus = Console.ReadLine();
 
@@ -125,6 +132,8 @@ if(selectedDefenceUnit != "3")
     }
 }
 
+units[1].SetBonus(Int32.Parse(selectedBonus));
+
 while(!Int32.TryParse(inputCombatTurns, out numberOfCombat))
 {
     Console.WriteLine("Enter number of attacks: ");
@@ -133,8 +142,8 @@ while(!Int32.TryParse(inputCombatTurns, out numberOfCombat))
 
 for(int i = 0; i < numberOfCombat; i++)
 {
-    resultAttack = attacker.Attack + rnd.Next(1, 9);
-    resultDefence = defender.Armor + rnd.Next(1, 9);
+    resultAttack = units[0].Attack + rnd.Next(1, 9);
+    resultDefence = units[1].Armor + rnd.Next(1, 9);
 
     if(resultAttack - resultDefence <= 0)
     {
@@ -148,7 +157,7 @@ for(int i = 0; i < numberOfCombat; i++)
 
 winPercentage = wins / numberOfCombat * 100;
 
-Console.WriteLine($"{attacker.Name} defeated {defender.Name} {wins} times.");
+Console.WriteLine($"{units[0].Name} defeated {units[1].Name} {wins} times.");
 Console.WriteLine($"Number of turns: {numberOfCombat}\nNumber of wins: {wins}\nNumber of loses: {lose}\nWin %: {(float)winPercentage}%");
 
 Console.WriteLine("Press any button to exit...");
