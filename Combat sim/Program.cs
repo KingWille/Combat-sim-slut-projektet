@@ -8,6 +8,7 @@ string selectedDefenceUnit = "";
 string selectedBonus = "";
 string inputCombatTurns = "";
 
+int counterArray = 1;
 int conflictChoice = 0;
 int numberOfCombat = 0;
 int resultAttack = 0;
@@ -26,9 +27,10 @@ BaseVariables[] units = new BaseVariables[2];
 Random rnd = new Random();
 
 //Sätter värdena till arrayen
-for(int i = 0; i < bonusArray.Length; i++)
-{
-    bonusArray[i] = i.ToString();
+for(int i =  0; i < bonusArray.Length; i++)
+{   
+    bonusArray[i] = counterArray.ToString();
+    counterArray++;
 } 
 
 while(typeOfStat != "1" && typeOfStat != "2")
