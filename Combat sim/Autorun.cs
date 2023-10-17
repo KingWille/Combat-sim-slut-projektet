@@ -120,7 +120,7 @@ namespace Combat_sim
                             lose = 0;
 
 
-                            using (writer = new StreamWriter(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/Stats.txt", true)) // true for appending the file and false to overwrite the file
+                            using (writer = new StreamWriter(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/StatsRevised.txt", true)) // true for appending the file and false to overwrite the file
                             { 
                                 writer.WriteLine($"{units[0].Name} vs {units[1].Name}. Turns: {numberOfCombat}. Winrate: {winPercentage}%");
                                 if(j == 8)

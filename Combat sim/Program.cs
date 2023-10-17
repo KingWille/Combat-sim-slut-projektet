@@ -35,7 +35,7 @@ for(int i =  0; i < bonusArray.Length; i++)
 
 while(typeOfStat != "1" && typeOfStat != "2")
 {
-    Console.WriteLine("1.AutoStats\n2.Manual");
+    Console.WriteLine("1.AutoStats Units\n2.Autostats siege\n3.Manual");
 
     typeOfStat = Console.ReadLine();
 
@@ -63,6 +63,25 @@ if (typeOfStat == "1")
     }
 
     autoRun.Run(conflictChoice);
+}
+else if(typeOfStat == "2")
+{
+    AutorunSiege autorunSiege = new AutorunSiege();
+
+    while (!Int32.TryParse(conflicts, out conflictChoice))
+    {
+        Console.WriteLine("Number of combats per conflict: ");
+
+        conflicts = Console.ReadLine();
+
+        if (!Int32.TryParse(conflicts, out conflictChoice))
+        {
+            Console.WriteLine("Please choose a valid answer");
+        }
+    }
+
+    autorunSiege.Run(conflictChoice);
+
 }
 else
 {

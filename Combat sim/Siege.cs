@@ -10,7 +10,7 @@ namespace Combat_sim
     {
         public Siege() 
         {
-            Armor = 11;
+            Armor = 8;
             Name = "Siege";
         }
 
